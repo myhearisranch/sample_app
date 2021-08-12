@@ -7,17 +7,58 @@ class TodolistsController < ApplicationController
   # 以下を追加
   def create
     # １. データを新規登録するためのインスタンス作成
-    list = List.new(list_params)
+    #list = List.new(list_params)
     # ２. データをデータベースに保存するためのsaveメソッド実行
-    list.save
+    #list.save
     # ３. トップ画面へリダイレクト
-    redirect_to '/top'
+   # redirect_to todolist_path(list.id)
+
+    @list=List.new(list_params)
+    #対象のカラムにデータが入力されれば、saveメソッドで
+    #trueが返される
+    #対象のカラムにデータが入力されていなければ、saveメソッドでfalseが返される
+
+    if @list.save
+      redirect_to todolist_path(@list.id)
+    else
+
+      #render:アクション名で、同じコントローラー内の別アクションをview
+      #viewを表示できる
+      render :new
+    end
   end
+
+  def index
+    #Listというモデルのデータを全て取り出す
+    @lists = List.all
+  end
+
+  def show
+    #特定のidのデータを取得
+    @list=List.find(params[:id])
+  end
+
+  def edit
+    @list=List.find(params[:id])
+  end
+
+  def update
+    list=List.find(params[:id])
+    list.update(list_params)
+    redirect_to todolist_path(list.id)
+
+  end
+
+
 
   private
   # ストロングパラメータ
   def list_params
     params.require(:list).permit(:title, :body)
+  end
+
+  def list_params
+   params.require(:list).permit(:title, :body, :image)
   end
 end
 
