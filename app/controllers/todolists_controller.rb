@@ -45,8 +45,17 @@ class TodolistsController < ApplicationController
   def update
     list=List.find(params[:id])
     list.update(list_params)
-    redirect_to todolist_path(list.id)
+    redirect_to todolist_path
 
+  end
+
+  def destroy
+    #データ（レコード）を一件取得
+    list=List.find(params[:id])
+    #データ（レコード）を削除
+    list.destroy
+    #投稿一覧画面へリダイレクト
+    redirect_to todolist_path(list.id)
   end
 
 
